@@ -2,15 +2,13 @@ import pygame
 import random
 
 class Pipe:
-    def __init__(self, WIDTH, HEIGHT, PIPE_GAP, PIPE_WIDTH, pipe_body_img, pipe_cap_img, GROUND_HEIGHT):
+    def __init__(self, WIDTH, HEIGHT, PIPE_GAP, PIPE_WIDTH, pipe_img, GROUND_HEIGHT):
         self.x = WIDTH
         self.PIPE_WIDTH = PIPE_WIDTH
         self.PIPE_GAP = PIPE_GAP
         self.HEIGHT = HEIGHT
         self.GROUND_HEIGHT = GROUND_HEIGHT
-        self.pipe_body_img = pipe_body_img
-        self.pipe_cap_img = pipe_cap_img
-        self.cap_height = pipe_cap_img.get_height()
+        self.pipe_img = pipe_img
 
         min_top = 50
         max_top = HEIGHT - GROUND_HEIGHT - PIPE_GAP - 50
@@ -28,16 +26,16 @@ class Pipe:
         self.bottom_rect.x = self.x
 
     def draw(self, win):
-        body_height = self.top_pipe_bottom - self.cap_height
-        if body_height > 0:
-            body_img = pygame.transform.scale(self.pipe_body_img, (self.PIPE_WIDTH, body_height))
-            body_img_flipped = pygame.transform.flip(body_img, False, True)
-            win.blit(body_img_flipped, (self.x, 0))  # <-- vẽ body sát mép trên
-        cap_img_flipped = pygame.transform.flip(self.pipe_cap_img, False, True)
-        win.blit(cap_img_flipped, (self.x, self.top_pipe_bottom - self.cap_height))
+        # Vẽ ống trên (crop từ trên xuống, rồi lật ngược)
+        top_crop_height = min(self.top_pipe_bottom, self.pipe_img.get_height())
+        if top_crop_height > 0:
+            top_crop = self.pipe_img.subsurface((0, 0, self.PIPE_WIDTH, top_crop_height))
+            top_img = pygame.transform.flip(top_crop, False, True)
+            win.blit(top_img, (self.x, 0))
 
-        bottom_height = self.HEIGHT - self.bottom_pipe_top - self.GROUND_HEIGHT - self.cap_height
+        # Vẽ ống dưới (crop từ trên cùng của ảnh)
+        bottom_height = self.HEIGHT - self.bottom_pipe_top - self.GROUND_HEIGHT
         if bottom_height > 0:
-            body_img = pygame.transform.scale(self.pipe_body_img, (self.PIPE_WIDTH, bottom_height))
-            win.blit(body_img, (self.x, self.bottom_pipe_top + self.cap_height))
-        win.blit(self.pipe_cap_img, (self.x, self.bottom_pipe_top))
+            bottom_crop_height = min(bottom_height, self.pipe_img.get_height())
+            bottom_crop = self.pipe_img.subsurface((0, 0, self.PIPE_WIDTH, bottom_crop_height))
+            win.blit(bottom_crop, (self.x, self.bottom_pipe_top))

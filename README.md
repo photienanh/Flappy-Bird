@@ -5,11 +5,10 @@ This is a Python implementation of the classic Flappy Bird game using the Pygame
 - Multiple game modes with separate high scores.
 - Animated start, game over, and replay screens.
 - Smooth controls and responsive physics.
-- Customizable graphics: easily replace bird, pipe, ground, or background images.
 - Persistent high score saving.
 - Clean, modular Python codebase for easy modification and extension.
 ## How to Play
-- Choose your game mode (Easy or Hard) on the start screen.
+- Choose your game mode (Easy or Hard or Impossible) on the start screen.
 - Press **Space** to make the bird jump.
 - Avoid hitting the pipes or the ground.
 - Score increases each time you pass through a pair of pipes.
